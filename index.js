@@ -4,8 +4,6 @@ const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 
-// const AppError = require("./AppError");
-
 const Product = require("./models/product");
 const Farm = require("./models/farm");
 const { Console } = require("console");
@@ -103,7 +101,6 @@ app.post("/products", async (req, res, next) => {
   try {
     const newProduct = new Product(req.body); //making new product
     await newProduct.save(); //saving the product
-    // res.redirect(`/products/${newProduct._id}`); //redirecting
   } catch (e) {
     next(e);
   }
@@ -122,9 +119,6 @@ app.get(
     // we are using mongo ID
     const { id } = req.params;
     const product = await Product.findById(id).populate("farm", "name");
-    // if (!product) {
-    //   throw next(new AppError("Product Not Found", 404));
-    // }
     // To show our product product/show
     res.render("products/show", { product });
   })
@@ -135,9 +129,6 @@ app.get("/products/:id/edit", async (req, res, next) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
-    // if (!product) {
-    //   throw next(new AppError("Cannot Edit", 404));
-    // }
     res.render("products/edit", { product, categories });
   } catch (e) {
     next(e);
@@ -162,7 +153,6 @@ app.delete("/products/:id", async (req, res) => {
   const deletedProduct = await Product.findByIdAndDelete(id);
   res.redirect("/products");
 });
-
 
 app.use((err, req, res, next) => {
   const { status = 500 } = err;
